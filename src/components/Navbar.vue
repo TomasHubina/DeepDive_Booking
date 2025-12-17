@@ -1,66 +1,38 @@
 <template>
-  <div id="app">
-    <TheNavbar />
-
-    <main>
-      <RouterView />
-    </main>
-
-    <footer>
+  <header class="navbar-header">
+    <nav class="navbar">
       <div class="container">
-        <p>&copy; 2025 DeepDive Booking. Všetky práva vyhradené.</p>
+        <div class="nav-brand">
+          <!--<img alt="Diving logo" class="logo" src="@/assets/logo.svg" width="50" height="50" />-->
+          <h1>DeepDive Booking</h1>
+        </div>
+
+        <div class="nav-links">
+          <RouterLink to="/">Domov</RouterLink>
+          <RouterLink to="/courses">Kurzy</RouterLink>
+          <RouterLink to="/instructors">Inštruktori</RouterLink>
+          <RouterLink to="/reservation">Rezervácia</RouterLink>
+          <RouterLink to="/about">O nás</RouterLink>
+        </div>
       </div>
-    </footer>
-  </div>
+    </nav>
+  </header>
 </template>
 
 <script>
-import TheNavbar from './components/Navbar.vue'
 export default {
-  name: 'App',
-  
-  components: {
-    TheNavbar
-  },
-  
-  data() {
-    return {
-      
-    }
-  },
-  
-  mounted() {
-    console.log('DeepDive Booking aplikácia spustená')
-  }
+  name: 'TheNavbar'
 }
 </script>
 
-<style>
-@import './assets/base.css';
-@import './assets/main.css';
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-#app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-header {
+<style scoped>
+.navbar-header {
   background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
   color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .navbar {
@@ -82,6 +54,7 @@ header {
 .nav-brand h1 {
   font-size: 1.5rem;
   font-weight: 700;
+  color: white;
 }
 
 .logo {
@@ -103,25 +76,13 @@ header {
 }
 
 .nav-links a:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 .nav-links a.router-link-active {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   font-weight: 600;
-}
-
-main {
-  flex: 1;
-  padding: 2rem 0;
-}
-
-footer {
-  background: #333;
-  color: white;
-  padding: 2rem 0;
-  margin-top: 4rem;
-  text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -134,6 +95,11 @@ footer {
     flex-direction: column;
     gap: 0.5rem;
     text-align: center;
+    width: 100%;
+  }
+  
+  .nav-links a {
+    width: 100%;
   }
 }
 </style>

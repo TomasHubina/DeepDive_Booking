@@ -1,7 +1,7 @@
 <template>
   <div class="instructor-card">
     <div class="instructor-image">
-      <img :src="instructor.image || placeholderImage" :alt="instructor.name" />
+      <img :src="instructor.image" :alt="instructor.name"/>
     </div>
     
     <div class="instructor-content">
@@ -10,21 +10,21 @@
       
       <div class="instructor-details">
         <div class="detail-item">
-          <span class="label">Skúsenosti:</span>
+          <span class="label">Skúsenosti: </span>
           <span class="value">{{ instructor.experience }}</span>
         </div>
         <div class="detail-item">
-          <span class="label">Špecializácia:</span>
+          <span class="label">Špecializácia: </span>
           <span class="value">{{ instructor.specialization }}</span>
         </div>
         <div class="detail-item">
-          <span class="label">Hodnotenie:</span>
+          <span class="label">Hodnotenie: </span>
           <span class="value rating">
             {{ instructor.rating }} ⭐
           </span>
         </div>
         <div class="detail-item">
-          <span class="label">Ukončených kurzov:</span>
+          <span class="label">Ukončených kurzov: </span>
           <span class="value">{{ instructor.coursesCount }}+</span>
         </div>
       </div>
@@ -58,10 +58,9 @@ export default {
   
   data() {
     return {
-      placeholderImage: 'https://via.placeholder.com/150/0066cc/ffffff?text=Instructor'
     }
   },
-  
+
   methods: {
     showInstructorCourses() {
       this.$emit('show-courses', this.instructor.id)
@@ -95,11 +94,12 @@ export default {
 }
 
 .instructor-image img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid white;
+  width: 150px !important;
+  height: 150px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 4px solid white !important;
+  display: block !important;
 }
 
 .instructor-content {

@@ -1,7 +1,7 @@
 <template>
   <div class="course-card">
     <div class="course-image">
-      <img :src="course.image || placeholderImage" :alt="course.name" />
+      <img :src="courseImage" :alt="course.name" @error="handleImageError" />
       <span :class="['level-badge', `level-badge--${course.level}`]">
         {{ levelText }}
       </span>
@@ -51,7 +51,7 @@ export default {
   
   data() {
     return {
-      placeholderImage: ''
+      imageError: false
     }
   },
   
@@ -64,12 +64,25 @@ export default {
         professional: 'Profesionál'
       }
       return levels[this.course.level] || this.course.level
+    },
+    
+    courseImage() {
+      // Ak nastala chyba pri načítaní obrázka, zobraz gradient pozadie
+      if (this.imageError || !this.course.image) {
+        return null
+      }
+      return this.course.image
     }
   },
   
   methods: {
     handleViewDetails() {
       this.$router.push({ name: 'course-detail', params: { id: this.course.id } })
+    },
+    
+    handleImageError(event) {
+      console.warn(`Obrázok sa nepodarilo načítať: ${this.course.image}`)
+      this.imageError = true
     }
   }
 }
