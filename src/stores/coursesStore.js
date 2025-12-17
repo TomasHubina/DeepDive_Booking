@@ -10,7 +10,7 @@ export const useCoursesStore = defineStore('courses', {
         duration: '3-4 dni',
         price: 350,
         level: 'beginner',
-        image: '/images/courses/owd.png',
+        image: '/DeepDive_Booking/images/courses/owd.png',
         maxStudents: 4,
         instructorId: 1
       },
@@ -21,7 +21,7 @@ export const useCoursesStore = defineStore('courses', {
         duration: '2 dni',
         price: 280,
         level: 'intermediate',
-        image: '/images/courses/aowd.png',
+        image: '/DeepDive_Booking/images/courses/aowd.png',
         maxStudents: 4,
         instructorId: 2
       },
@@ -32,7 +32,7 @@ export const useCoursesStore = defineStore('courses', {
         duration: '3 dni',
         price: 320,
         level: 'intermediate',
-        image: '/images/courses/rescue.png',
+        image: '/DeepDive_Booking/images/courses/rescue.png',
         maxStudents: 6,
         instructorId: 1
       },
@@ -43,7 +43,7 @@ export const useCoursesStore = defineStore('courses', {
         duration: '2-3 týždne',
         price: 850,
         level: 'professional',
-        image: '/images/courses/divemaster.png',
+        image: '/DeepDive_Booking/images/courses/divemaster.png',
         maxStudents: 3,
         instructorId: 3
       },
@@ -54,7 +54,7 @@ export const useCoursesStore = defineStore('courses', {
         duration: '1 deň',
         price: 150,
         level: 'intermediate',
-        image: '/images/courses/nitrox.png',
+        image: '/DeepDive_Booking/images/courses/nitrox.png',
         maxStudents: 8,
         instructorId: 2
       },
@@ -65,7 +65,7 @@ export const useCoursesStore = defineStore('courses', {
         duration: '2 dni',
         price: 250,
         level: 'advanced',
-        image: '/images/courses/deep.png',
+        image: '/DeepDive_Booking/images/courses/deep.png',
         maxStudents: 4,
         instructorId: 3
       }
@@ -77,7 +77,7 @@ export const useCoursesStore = defineStore('courses', {
         certification: 'PADI Master Instructor',
         experience: '15 rokov',
         specialization: 'Kurzy pre začiatočníkov, Wreck diving',
-        image: '/images/instructors/instructor1.png',
+        image: '/DeepDive_Booking/images/instructors/instructor1.png',
         rating: 4.9,
         coursesCount: 250
       },
@@ -87,7 +87,7 @@ export const useCoursesStore = defineStore('courses', {
         certification: 'SSI Instructor Trainer',
         experience: '12 rokov',
         specialization: 'Technické potápanie, Deep diving',
-        image: '/images/instructors/instructor3.png',
+        image: '/DeepDive_Booking/images/instructors/instructor3.png',
         rating: 4.8,
         coursesCount: 180
       },
@@ -97,7 +97,7 @@ export const useCoursesStore = defineStore('courses', {
         certification: 'PADI Course Director',
         experience: '20 rokov',
         specialization: 'Profesionálne kurzy, Rescue',
-        image: '/images/instructors/instructor2.png',
+        image: '/DeepDive_Booking/images/instructors/instructor2.png',
         rating: 5.0,
         coursesCount: 320
       }
