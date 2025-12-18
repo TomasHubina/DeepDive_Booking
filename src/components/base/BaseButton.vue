@@ -104,4 +104,15 @@ export default {
   transform: none;
   box-shadow: none;
 }
+
+.btn--danger {
+  background: #dc3545;
+  color: white;
+  border: 2px solid #dc3545;
+}
+
+.btn--danger:hover {
+  background: #c82333;
+  border-color: #c82333;
+}
 </style>

@@ -152,6 +152,7 @@
 import { useCoursesStore } from '@/stores/coursesStore'
 import { useReservationStore } from '@/stores/reservationStore'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useAuthStore } from '@/stores/authStore'
 
 export default {
   name: 'ReservationView',
@@ -164,6 +165,7 @@ export default {
     return {
       coursesStore: null,
       reservationStore: null,
+      authStore: null,
       reservationSubmitted: false,
       submittedReservation: null,
       formData: {
@@ -211,8 +213,8 @@ export default {
   created() {
     this.coursesStore = useCoursesStore()
     this.reservationStore = useReservationStore()
-    
-    // Check if there's a pre-selected course from route params
+    this.authStore = useAuthStore()
+
     const courseId = this.$route.params.courseId
     if (courseId) {
       this.formData.courseId = parseInt(courseId)
@@ -225,10 +227,29 @@ export default {
         this.formData.participants = this.selectedCourse.maxStudents
       }
     },
+
+      validateForm() {
+      if (!this.isFormValid) {
+        alert('Prosím vyplňte všetky povinné polia.')
+        return false
+      }
+      
+      if (this.selectedCourse && this.formData.participants > this.selectedCourse.maxStudents) {
+        alert(`Maximálny počet účastníkov je ${this.selectedCourse.maxStudents}.`)
+        return false
+      }
+      
+      return true
+    },
     
     submitReservation() {
       try {
-        // Update reservation store
+        if (!this.validateForm()) return
+      
+      if (this.authStore.isLoggedIn && this.selectedCourse) {
+        this.authStore.addCourseToUser(this.selectedCourse.id)
+      }
+
         this.reservationStore.updateReservationField('courseId', this.formData.courseId)
         this.reservationStore.updateReservationField('studentName', this.formData.studentName)
         this.reservationStore.updateReservationField('studentEmail', this.formData.studentEmail)
@@ -237,13 +258,16 @@ export default {
         this.reservationStore.updateReservationField('participants', this.formData.participants)
         this.reservationStore.updateReservationField('notes', this.formData.notes)
         
-        // Submit reservation
         const reservation = this.reservationStore.submitReservation()
         this.submittedReservation = reservation
         this.reservationSubmitted = true
         
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' })
+
+        if (this.authStore.isLoggedIn) {
+          this.$router.push('/my-courses')
+        }
+
       } catch (error) {
         console.error('Error submitting reservation:', error)
         alert('Nastala chyba pri odosielaní rezervácie. Skúste to prosím znova.')
@@ -304,7 +328,6 @@ h1 {
   margin: 0 auto;
 }
 
-/* Course Summary */
 .course-summary {
   background: white;
   padding: 2rem;
@@ -345,7 +368,6 @@ h1 {
   color: #666;
 }
 
-/* Reservation Form */
 .reservation-form {
   background: white;
   padding: 2rem;
@@ -417,7 +439,6 @@ h1 {
   gap: 1rem;
 }
 
-/* Confirmation */
 .confirmation {
   max-width: 600px;
   margin: 0 auto;
