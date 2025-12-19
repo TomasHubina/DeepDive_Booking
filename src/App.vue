@@ -21,7 +21,7 @@ export default {
   
   components: {
     TheNavbar
-  },
+  }/*,
 
   data() {
     return {
@@ -31,7 +31,7 @@ export default {
   
   mounted() {
     console.log('DeepDive Booking aplikácia spustená')
-  }
+  }*/
 }
 </script>
 

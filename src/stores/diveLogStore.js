@@ -32,8 +32,76 @@ export const useDiveLogStore = defineStore('diveLog', {
       const userDives = state.dives.filter(dive => dive.userId === userId)
       if (userDives.length === 0) return 0
       return Math.max(...userDives.map(dive => dive.depth))
-    }
-  },
+    },
+
+  averageDepth: (state) => (userId) => {
+      const userDives = state.dives.filter(dive => dive.userId === userId)
+      if (userDives.length === 0) return 0
+      const total = userDives.reduce((sum, dive) => sum + dive.depth, 0)
+      return Math.round((total / userDives.length) * 10) / 10
+    },
+    
+    averageDuration: (state) => (userId) => {
+      const userDives = state.dives.filter(dive => dive.userId === userId)
+      if (userDives.length === 0) return 0
+      const total = userDives.reduce((sum, dive) => sum + dive.duration, 0)
+      return Math.round(total / userDives.length)
+    },
+    
+    lastDive: (state) => (userId) => {
+      const userDives = state.dives
+        .filter(dive => dive.userId === userId)
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+      return userDives[0] || null
+    },
+    
+    divesThisMonth: (state) => (userId) => {
+      const now = new Date()
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      return state.dives.filter(dive => 
+        dive.userId === userId && new Date(dive.date) >= startOfMonth
+      ).length
+    },
+
+    divesPerMonth: (state) => (userId) => {
+      const months = []
+      const now = new Date()
+      
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
+        const monthName = date.toLocaleDateString('sk-SK', { month: 'short' })
+        const year = date.getFullYear()
+        
+        const count = state.dives.filter(dive => {
+          const diveDate = new Date(dive.date)
+          return dive.userId === userId &&
+                 diveDate.getMonth() === date.getMonth() &&
+                 diveDate.getFullYear() === date.getFullYear()
+        }).length
+        
+        months.push({
+          label: `${monthName} ${year}`,
+          count: count
+        })
+      }
+      
+      return months
+    },
+
+    topLocations: (state) => (userId) => {
+      const userDives = state.dives.filter(dive => dive.userId === userId)
+      const locationCounts = {}
+      
+      userDives.forEach(dive => {
+        locationCounts[dive.location] = (locationCounts[dive.location] || 0) + 1
+      })
+      
+      return Object.entries(locationCounts)
+        .map(([location, count]) => ({ location, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5)
+    },
+    },
   
   actions: {
     loadDives() {

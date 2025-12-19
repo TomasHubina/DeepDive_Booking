@@ -36,6 +36,61 @@
               <div class="stat-label">Najväčšia hĺbka</div>
             </div>
           </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <div class="stat-value">{{ averageDepthValue }}m</div>
+              <div class="stat-label">Priemerná hĺbka</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extended-stats">
+          <div class="extended-stat-card">
+            <h3>⏱️ Priemerný čas ponoru</h3>
+            <p class="big-number">{{ averageDurationValue }} min</p>
+          </div>
+          
+          <div class="extended-stat-card" v-if="lastDiveData">
+            <h3>🕐 Posledný ponor</h3>
+            <p class="location">{{ lastDiveData.location }}</p>
+            <p class="date">{{ formatDate(lastDiveData.date) }}</p>
+          </div>
+          
+          <div class="extended-stat-card">
+            <h3>📅 Tento mesiac</h3>
+            <p class="big-number">{{ divesThisMonthValue }} ponorov</p>
+          </div>
+        </div>
+
+        <div v-if="totalDives > 0" class="chart-section">
+          <h2>📈 Ponory za posledných 6 mesiacov</h2>
+          <DiveBarChart :data="monthlyData" />
+        </div>
+        
+        <!-- Top 5 miest -->
+        <div v-if="topLocationsData.length > 0" class="locations-section">
+          <h2>📍 Top 5 potápačských miest</h2>
+          <div class="locations-list">
+            <div 
+              v-for="(location, index) in topLocationsData" 
+              :key="index"
+              class="location-item"
+            >
+              <div class="location-rank">{{ index + 1 }}</div>
+              <div class="location-info">
+                <div class="location-name">{{ location.location }}</div>
+                <div class="location-bar">
+                  <div 
+                    class="location-bar-fill"
+                    :style="{ width: getLocationBarWidth(location.count) + '%' }"
+                  ></div>
+                </div>
+              </div>
+              <div class="location-count">{{ location.count }} ponorov</div>
+            </div>
+          </div>
         </div>
         
         <div v-if="userDives.length === 0" class="empty-state">
@@ -159,7 +214,7 @@
         </div>
       </form>
     </BaseModal>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -168,6 +223,7 @@ import { useDiveLogStore } from '@/stores/diveLogStore'
 import DiveLogCard from '@/components/DiveLogCard.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseModal from '@/components/base/BaseModal.vue'
+import DiveBarChart from '@/components/DiveBarChart.vue'
 
 export default {
   name: 'DiveLogView',
@@ -175,7 +231,8 @@ export default {
   components: {
     DiveLogCard,
     BaseButton,
-    BaseModal
+    BaseModal,
+    DiveBarChart
   },
   
   data() {
@@ -217,6 +274,36 @@ export default {
       if (!this.authStore.currentUser) return 0
       return this.diveLogStore.maxDepth(this.authStore.currentUser.id)
     },
+
+    averageDepthValue() {
+      if (!this.authStore.currentUser) return 0
+      return this.diveLogStore.averageDepth(this.authStore.currentUser.id)
+    },
+    
+    averageDurationValue() {
+      if (!this.authStore.currentUser) return 0
+      return this.diveLogStore.averageDuration(this.authStore.currentUser.id)
+    },
+    
+    lastDiveData() {
+      if (!this.authStore.currentUser) return null
+      return this.diveLogStore.lastDive(this.authStore.currentUser.id)
+    },
+    
+    divesThisMonthValue() {
+      if (!this.authStore.currentUser) return 0
+      return this.diveLogStore.divesThisMonth(this.authStore.currentUser.id)
+    },
+
+    monthlyData() {
+      if (!this.authStore.currentUser) return []
+      return this.diveLogStore.divesPerMonth(this.authStore.currentUser.id)
+    },
+    
+    topLocationsData() {
+      if (!this.authStore.currentUser) return []
+      return this.diveLogStore.topLocations(this.authStore.currentUser.id)
+    },
     
     maxDate() {
       return new Date().toISOString().split('T')[0]
@@ -234,6 +321,31 @@ export default {
   },
   
   methods: {
+
+    formatTime(minutes) {
+      const hours = Math.floor(minutes / 60)
+      const mins = minutes % 60
+      if (hours > 0) {
+        return `${hours}h ${mins}min`
+      }
+      return `${mins} min`
+    },
+    
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('sk-SK', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })
+    },
+    
+    getLocationBarWidth(count) {
+      if (this.topLocationsData.length === 0) return 0
+      const maxCount = this.topLocationsData[0].count
+      return (count / maxCount) * 100
+    },
+
     openAddForm() {
       this.isEditMode = false
       this.editingDiveId = null
@@ -328,14 +440,24 @@ h1 {
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
-  color: white;
+  /*background: linear-gradient(135deg, #0066cc 0%, #004499 100%);*/ background: white; 
+  /*color: white;*/ color: #333;
   padding: 2rem;
   border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-card.primary {
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+  color: white;
 }
 
 .stat-icon {
@@ -356,6 +478,128 @@ h1 {
 .stat-label {
   font-size: 0.875rem;
   opacity: 0.9;
+}
+
+.stat-card:not(.primary) .stat-value {
+  color: #0066cc;
+}
+
+.stat-card:not(.primary) .stat-label {
+  color: #666;
+}
+
+.extended-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.extended-stat-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.extended-stat-card h3 {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.big-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0066cc;
+  margin: 0;
+}
+
+.location {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.date {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.chart-section,
+.locations-section {
+  margin-bottom: 3rem;
+}
+
+.chart-section h2,
+.locations-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+.locations-list {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.location-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.location-item:last-child {
+  border-bottom: none;
+}
+
+.location-rank {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.location-info {
+  flex: 1;
+}
+
+.location-name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.location-bar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.location-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0066cc 0%, #004499 100%);
+  transition: width 0.5s ease;
+}
+
+.location-count {
+  font-weight: 700;
+  color: #0066cc;
+  white-space: nowrap;
 }
 
 .not-logged-in,
