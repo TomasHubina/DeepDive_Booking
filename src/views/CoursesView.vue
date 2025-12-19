@@ -54,12 +54,10 @@ export default {
     filteredCourses() {
       let courses = this.coursesStore?.courses || []
       
-      // Filter by level
       if (this.selectedLevel && this.selectedLevel !== 'all') {
         courses = courses.filter(course => course.level === this.selectedLevel)
       }
       
-      // Filter by search term
       if (this.searchTerm) {
         const term = this.searchTerm.toLowerCase()
         courses = courses.filter(course => 

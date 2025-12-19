@@ -141,7 +141,6 @@ h1 {
   gap: 2rem;
 }
 
-/* Modal Styles */
 .modal-courses {
   display: grid;
   gap: 1.5rem;

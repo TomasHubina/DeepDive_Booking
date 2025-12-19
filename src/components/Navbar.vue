@@ -3,8 +3,7 @@
     <nav class="navbar">
       <div class="container">
         <div class="nav-brand">
-          <!--<img alt="Diving logo" class="logo" src="@/assets/logo.svg" width="50" height="50" />-->
-          <h1>DeepDive Booking</h1>
+          <h1>DeepDive</h1>
         </div>
 
         <button class="hamburger" @click="toggleMenu" :class="{ active: isMenuOpen }">
@@ -25,6 +24,10 @@
           <RouterLink to="/about" @click="closeMenu">O nás</RouterLink>
           <RouterLink v-if="authStore.isLoggedIn" to="/my-courses" @click="closeMenu">
             Moje kurzy
+          </RouterLink>
+
+          <RouterLink v-if="authStore.isLoggedIn" to="/dive-log" @click="closeMenu">
+            Dive Log
           </RouterLink>
           
           <RouterLink v-if="!authStore.isLoggedIn" to="/reservation" @click="closeMenu">
@@ -135,10 +138,6 @@ export default {
   font-weight: 700;
   color: white;
 }
-
-/*.logo {
-  filter: brightness(0) invert(1);
-} */
 
 .hamburger {
   display: none;

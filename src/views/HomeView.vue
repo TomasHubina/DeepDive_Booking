@@ -3,7 +3,7 @@
     <section class="hero">
       <div class="container">
         <div class="hero-content">
-          <h1>Vitajte v DeepDive Booking</h1>
+          <h1>Vitajte v DeepDive</h1>
           <p class="hero-subtitle">
             Objavte podmorský svet s našimi profesionálnymi potápačskými kurzami
           </p>
@@ -144,7 +144,6 @@ export default {
   background: #f5f5f5;
 }
 
-/* Hero Section */
 .hero {
   background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
   color: white;
@@ -216,7 +215,6 @@ export default {
   line-height: 1.6;
 }
 
-/* Popular Courses Section */
 .popular-courses {
   padding: 4rem 0;
 }
@@ -240,7 +238,6 @@ export default {
   margin-top: 2rem;
 }
 
-/* Stats Section */
 .stats {
   padding: 4rem 0;
   background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
@@ -269,7 +266,6 @@ export default {
   opacity: 0.9;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .hero-content h1 {
     font-size: 2rem;

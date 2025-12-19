@@ -67,7 +67,6 @@ export default {
     },
     
     courseImage() {
-      // Ak nastala chyba pri načítaní obrázka, zobraz gradient pozadie
       if (this.imageError || !this.course.image) {
         return null
       }

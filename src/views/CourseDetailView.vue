@@ -325,7 +325,6 @@ h2 {
   color: #666;
 }
 
-/* Modal Styles - skopírované z InstructorsView */
 .modal-courses {
   display: grid;
   gap: 1.5rem;

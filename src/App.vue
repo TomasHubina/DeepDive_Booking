@@ -8,7 +8,7 @@
 
     <footer>
       <div class="container">
-        <p>&copy; 2025 DeepDive Booking. Všetky práva vyhradené.</p>
+        <p>&copy; 2025 DeepDive. Všetky práva vyhradené.</p>
       </div>
     </footer>
   </div>
@@ -22,7 +22,7 @@ export default {
   components: {
     TheNavbar
   },
-  
+
   data() {
     return {
       

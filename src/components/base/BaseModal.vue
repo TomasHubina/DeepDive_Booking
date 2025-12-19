@@ -136,7 +136,6 @@ export default {
   justify-content: flex-end;
 }
 
-/* Transitions */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s ease;

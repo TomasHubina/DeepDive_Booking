@@ -160,7 +160,6 @@ export default {
   min-height: 70vh;
 }
 
-/* Hero Section */
 .about-hero {
   text-align: center;
   padding: 3rem 0;
@@ -180,7 +179,6 @@ export default {
   opacity: 0.9;
 }
 
-/* Content */
 .about-content {
   display: grid;
   gap: 3rem;
@@ -205,7 +203,6 @@ export default {
   margin-bottom: 1rem;
 }
 
-/* Values Grid */
 .values-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -241,7 +238,6 @@ export default {
   margin: 0;
 }
 
-/* Features List */
 .features-list {
   list-style: none;
   padding: 0;
@@ -259,7 +255,6 @@ export default {
   font-weight: 500;
 }
 
-/* Stats Block */
 .stats-block {
   background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
   color: white;
@@ -291,7 +286,6 @@ export default {
   opacity: 0.9;
 }
 
-/* CTA Block */
 .cta-block {
   text-align: center;
   background: #f8f9fa;

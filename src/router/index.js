@@ -7,6 +7,7 @@ import InstructorsView from '../views/InstructorsView.vue'
 import ReservationView from '../views/ReservationView.vue'
 import AboutView from '../views/AboutView.vue'
 import MyCoursesView from '../views/MyCoursesView.vue'
+import DiveLogView from '../views/DiveLogView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +46,12 @@ const router = createRouter({
       path: '/my-courses',
       name: 'my-courses',
       component: MyCoursesView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/dive-log',
+      name: 'dive-log',
+      component: DiveLogView,
       meta: { requiresAuth: true }
     }
   ]
