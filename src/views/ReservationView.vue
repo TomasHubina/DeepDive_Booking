@@ -154,6 +154,8 @@ import { useReservationStore } from '@/stores/reservationStore'
 import BaseButton from '@/components/base/BaseButton.vue'
 import { useAuthStore } from '@/stores/authStore'
 
+import { useRegistrationStore } from '@/stores/registrationStore'
+
 export default {
   name: 'ReservationView',
   
@@ -163,9 +165,10 @@ export default {
   
   data() {
     return {
+      authStore: null,
       coursesStore: null,
       reservationStore: null,
-      authStore: null,
+      registrationStore: null,
       reservationSubmitted: false,
       submittedReservation: null,
       formData: {
@@ -209,15 +212,23 @@ export default {
              this.formData.participants > 0
     }
   },
-  
+
   created() {
+     this.authStore = useAuthStore()
     this.coursesStore = useCoursesStore()
     this.reservationStore = useReservationStore()
-    this.authStore = useAuthStore()
+    this.registrationStore = useRegistrationStore()
+    
+    this.authStore.checkAuth()
 
     const courseId = this.$route.params.courseId
     if (courseId) {
       this.formData.courseId = parseInt(courseId)
+    }
+
+    if (this.authStore.isLoggedIn && this.authStore.user) {
+      this.formData.studentName = this.authStore.user.name || ''
+      this.formData.studentEmail = this.authStore.user.email || ''
     }
   },
   
@@ -243,13 +254,10 @@ export default {
     },
     
     submitReservation() {
-      try {
-        if (!this.validateForm()) return
-      
-      if (this.authStore.isLoggedIn && this.selectedCourse) {
-        this.authStore.addCourseToUser(this.selectedCourse.id)
-      }
 
+      if (!this.validateForm()) return
+
+      try {
         this.reservationStore.updateReservationField('courseId', this.formData.courseId)
         this.reservationStore.updateReservationField('studentName', this.formData.studentName)
         this.reservationStore.updateReservationField('studentEmail', this.formData.studentEmail)
@@ -260,20 +268,26 @@ export default {
         
         const reservation = this.reservationStore.submitReservation()
         this.submittedReservation = reservation
-        this.reservationSubmitted = true
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' })
 
-        if (this.authStore.isLoggedIn) {
-          this.$router.push('/my-courses')
+     if (this.authStore.isLoggedIn && this.selectedCourse) {
+          this.registrationStore.addRegistration(
+            this.authStore.user.id,
+            this.selectedCourse.id,
+            this.formData.participants, 
+            this.formData.preferredDate   
+          )
         }
+        
+        this.reservationSubmitted = true
 
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        
       } catch (error) {
-        console.error('Error submitting reservation:', error)
-        alert('Nastala chyba pri odosielaní rezervácie. Skúste to prosím znova.')
+        console.error('❌ ERROR:', error)
+        alert('Nastala chyba pri odosielaní rezervácie.')
       }
     },
-    
+
     cancelReservation() {
       this.$router.push('/courses')
     },
@@ -304,8 +318,8 @@ export default {
         day: 'numeric' 
       })
     }
-  }
-}
+  }}
+
 </script>
 
 <style scoped>

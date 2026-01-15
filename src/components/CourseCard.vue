@@ -37,11 +37,11 @@ import BaseButton from './base/BaseButton.vue'
 
 export default {
   name: 'CourseCard',
-  
+
   components: {
     BaseButton
   },
-  
+
   props: {
     course: {
       type: Object,
@@ -54,7 +54,7 @@ export default {
       imageError: false
     }
   },
-  
+
   computed: {
     levelText() {
       const levels = {

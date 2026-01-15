@@ -2,8 +2,8 @@
   <button 
     :class="['base-button', `base-button--${variant}`, { 'base-button--disabled': disabled }]"
     :disabled="disabled"
-    @click="handleClick"
   >
+
     <slot></slot>
   </button>
 </template>
@@ -23,14 +23,6 @@ export default {
       default: false
     }
   },
-  
-  methods: {
-    handleClick(event) {
-      if (!this.disabled) {
-        this.$emit('click', event)
-      }
-    }
-  }
 }
 </script>
 

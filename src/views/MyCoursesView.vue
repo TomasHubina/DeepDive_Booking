@@ -10,8 +10,8 @@
       
       <div v-else>
         <div class="user-info">
-          <h2>Vitajte, {{ authStore.currentUser.name }}!</h2>
-          <p class="user-email">{{ authStore.currentUser.email }}</p>
+          <h2>Vitajte, {{ authStore.user?.name }}!</h2>
+          <p class="user-email">{{ authStore.user?.email }}</p>
         </div>
         
         <div v-if="registeredCourses.length === 0" class="empty-state">
@@ -25,21 +25,41 @@
           
           <div class="courses-grid">
             <div 
-              v-for="course in registeredCourses" 
-              :key="course.id"
+              v-for="(courseData) in registeredCourses"  
+              :key="courseData.course.id"
               class="course-card-wrapper"
-            >
-              <CourseCard :course="course" />
+            > 
+              <CourseCard :course="courseData.course" />
+              
+              <div class="registration-info">
+                <div class="info-row">
+                  <span class="icon">👥</span>
+                  <span><strong>Počet účastníkov:</strong> {{ courseData.participants }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="icon">💰</span>
+                  <span><strong>Celková cena:</strong> {{ courseData.totalPrice }}€</span>
+                </div>
+              <div v-if="courseData.preferredDate" class="info-row">
+                <span class="icon">🗓️</span>
+                <span><strong>Začiatok kurzu:</strong> {{ formatDate(courseData.preferredDate) }}</span>
+              </div>
+                <div class="info-row">
+                  <span class="icon">📅</span>
+                  <span><strong>Registrovaný:</strong> {{ formatDate(courseData.registeredAt) }}</span>
+                </div>
+              </div>
+              
               <div class="course-actions">
                 <BaseButton 
                   variant="outline" 
-                  @click="viewCourseDetail(course.id)"
+                  @click="viewCourseDetail(courseData.course.id)"
                 >
                   Zobraziť detail
                 </BaseButton>
                 <BaseButton 
                   variant="danger" 
-                  @click="cancelCourse(course.id)"
+                  @click="cancelCourse(courseData.course.id)"
                 >
                   Zrušiť kurz
                 </BaseButton>
@@ -55,6 +75,7 @@
 <script>
 import { useAuthStore } from '@/stores/authStore'
 import { useCoursesStore } from '@/stores/coursesStore'
+import { useRegistrationStore } from '@/stores/registrationStore'
 import CourseCard from '@/components/CourseCard.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 
@@ -69,27 +90,43 @@ export default {
   data() {
     return {
       authStore: null,
-      coursesStore: null
+      coursesStore: null,
+      registrationStore: null
     }
   },
-  
+
   computed: {
     registeredCourses() {
-      if (!this.authStore.currentUser) return []
       
-      return this.authStore.currentUser.registeredCourses
-        .map(courseId => this.coursesStore.getCourseById(courseId))
-        .filter(course => course !== undefined)
+      if (!this.authStore?.user) return []
+      
+      const registrations = this.registrationStore.getRegistrationsByUser(this.authStore.user.id)
+      
+      const coursesWithDetails = registrations
+        .map(registration => {
+          const course = this.coursesStore.getCourseById(registration.courseId)
+          if (!course) return null
+          
+          return {
+            course: course,
+            participants: registration.participants,
+            totalPrice: course.price * registration.participants,
+            preferredDate: registration.preferredDate,
+            registeredAt: registration.registeredAt
+          }
+        })
+        .filter(item => item !== null)
+      
+      return coursesWithDetails
     }
   },
-  
+
   created() {
     this.authStore = useAuthStore()
     this.coursesStore = useCoursesStore()
+    this.registrationStore = useRegistrationStore()
     
-    if (!this.authStore.isLoggedIn) {
-      this.$router.push('/')
-    }
+    this.authStore.checkAuth()
   },
   
   methods: {
@@ -99,8 +136,18 @@ export default {
     
     cancelCourse(courseId) {
       if (confirm('Naozaj chcete zrušiť tento kurz?')) {
-        this.authStore.removeCourseFromUser(courseId)
+        this.registrationStore.removeRegistration(this.authStore.user.id, courseId) 
       }
+    },
+
+      formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('sk-SK', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })
+
     }
   }
 }
@@ -173,6 +220,31 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.registration-info {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.info-row .icon {
+  font-size: 1.25rem;
+}
+
+.info-row strong {
+  color: #0066cc;
 }
 
 .course-actions {

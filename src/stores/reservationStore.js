@@ -21,14 +21,6 @@ export const useReservationStore = defineStore('reservation', {
     getReservationById: (state) => (id) => {
       return state.reservations.find(res => res.id === id)
     },
-    
-    totalRevenue: (state) => {
-      const coursesStore = useCoursesStore()
-      return state.reservations.reduce((total, reservation) => {
-        const course = coursesStore.getCourseById(reservation.courseId)
-        return total + (course?.price || 0) * reservation.participants
-      }, 0)
-    }
   },
   
   actions: {
@@ -75,19 +67,5 @@ export const useReservationStore = defineStore('reservation', {
         notes: ''
       }
     },
-    
-    cancelReservation(id) {
-      const index = this.reservations.findIndex(res => res.id === id)
-      if (index !== -1) {
-        this.reservations[index].status = 'cancelled'
-      }
-    },
-    
-    deleteReservation(id) {
-      const index = this.reservations.findIndex(res => res.id === id)
-      if (index !== -1) {
-        this.reservations.splice(index, 1)
-      }
-    }
   }
 })

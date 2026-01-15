@@ -94,6 +94,7 @@
 <script>
 import { useCoursesStore } from '@/stores/coursesStore'
 import { useReservationStore } from '@/stores/reservationStore'
+import { useAuthStore } from '@/stores/authStore'
 import InstructorCard from '@/components/InstructorCard.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseModal from '@/components/base/BaseModal.vue'
@@ -111,6 +112,7 @@ export default {
     return {
       coursesStore: null,
       reservationStore: null,
+      authStore: null,
       isModalOpen: false,
       selectedInstructorId: null
     }
@@ -157,6 +159,8 @@ export default {
   created() {
     this.coursesStore = useCoursesStore()
     this.reservationStore = useReservationStore()
+    this.authStore = useAuthStore()
+    this.authStore.checkAuth()
   },
   
   methods: {

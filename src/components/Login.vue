@@ -82,7 +82,7 @@ export default {
         this.$emit('login-success')
         this.closeModal()
       } else {
-        this.errorMessage = 'Nesprávne prihlasovacie údaje'
+        this.errorMessage = 'Chyba pri prihlasovaní'
       }
     },
     

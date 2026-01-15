@@ -14,20 +14,31 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     login(email, password) {
       if (email && password) {
-        this.user = {
-          id: 1,
-          email: email,
-          name: email.split('@')[0],
-          registeredCourses: [] 
-        }
-        this.isAuthenticated = true
+        let savedUsers = localStorage.getItem('users')
+        let users = savedUsers ? JSON.parse(savedUsers) : []
         
+        let existingUser = users.find(u => u.email === email)
+        
+        if (existingUser) {
+          this.user = existingUser
+        } else {
+          this.user = {
+            id: Date.now(),
+            email: email,
+            name: email.split('@')[0]
+          }
+          users.push(this.user)
+          localStorage.setItem('users', JSON.stringify(users))
+        }
+        
+        this.isAuthenticated = true
         localStorage.setItem('user', JSON.stringify(this.user))
+
         return true
       }
       return false
     },
-    
+
     logout() {
       this.user = null
       this.isAuthenticated = false
@@ -41,21 +52,5 @@ export const useAuthStore = defineStore('auth', {
         this.isAuthenticated = true
       }
     },
-    
-    addCourseToUser(courseId) {
-      if (this.user) {
-        if (!this.user.registeredCourses.includes(courseId)) {
-          this.user.registeredCourses.push(courseId)
-          localStorage.setItem('user', JSON.stringify(this.user))
-        }
-      }
-    },
-    
-    removeCourseFromUser(courseId) {
-      if (this.user) {
-        this.user.registeredCourses = this.user.registeredCourses.filter(id => id !== courseId)
-        localStorage.setItem('user', JSON.stringify(this.user))
-      }
-    }
   }
 })
