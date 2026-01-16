@@ -2,8 +2,29 @@
   <div class="reservation-view">
     <div class="container">
       <h1>Rezervácia kurzu</h1>
-      
-      <div v-if="!reservationSubmitted" class="reservation-form-container">
+
+      <div v-if="isAlreadyRegistered && !isSubmitting" class="already-registered">
+        <div class="warning-icon">⚠️</div>
+        <h2>Tento kurz už máte rezervovaný</h2>
+        <p>Kurz <strong>{{ selectedCourse?.name }}</strong> ste si už zarezervovali.</p>
+        <div class="warning-details">
+          <p><strong>Počet účastníkov:</strong> {{ existingRegistration?.participants }}</p>
+          <p v-if="existingRegistration?.preferredDate">
+            <strong>Začiatok kurzu:</strong> {{ formatDate(existingRegistration.preferredDate) }}
+          </p>
+          <p><strong>Zaregistrované:</strong> {{ formatDate(existingRegistration?.registeredAt) }}</p>
+        </div>
+        <div class="warning-actions">
+          <BaseButton @click="goToMyCourses">
+            Zobraziť moje kurzy
+          </BaseButton>
+          <BaseButton variant="outline" @click="goToCourses">
+            Vybrať iný kurz
+          </BaseButton>
+        </div>
+      </div>
+
+      <div v-else-if="!reservationSubmitted" class="reservation-form-container">
         <div v-if="selectedCourse" class="course-summary">
           <h2>Vybraný kurz</h2>
           <div class="course-info">
@@ -171,6 +192,7 @@ export default {
       registrationStore: null,
       reservationSubmitted: false,
       submittedReservation: null,
+      isSubmitting: false,
       formData: {
         courseId: null,
         studentName: '',
@@ -191,6 +213,26 @@ export default {
     selectedCourse() {
       if (!this.formData.courseId) return null
       return this.coursesStore?.getCourseById(this.formData.courseId)
+    },
+
+    isAlreadyRegistered() {
+      if (!this.authStore?.isLoggedIn || !this.formData.courseId) {
+        return false
+      }
+      
+      return this.registrationStore.isUserRegistered(
+        this.authStore.user.id,
+        this.formData.courseId
+      )
+    },
+    
+    existingRegistration() {
+      if (!this.isAlreadyRegistered) return null
+      
+      return this.registrationStore.getRegistrationDetails(
+        this.authStore.user.id,
+        this.formData.courseId
+      )
     },
     
     totalPrice() {
@@ -257,6 +299,8 @@ export default {
 
       if (!this.validateForm()) return
 
+      this.isSubmitting = true
+
       try {
         this.reservationStore.updateReservationField('courseId', this.formData.courseId)
         this.reservationStore.updateReservationField('studentName', this.formData.studentName)
@@ -285,6 +329,7 @@ export default {
       } catch (error) {
         console.error('❌ ERROR:', error)
         alert('Nastala chyba pri odosielaní rezervácie.')
+        this.isSubmitting = false
       }
     },
 
@@ -295,6 +340,7 @@ export default {
     makeAnotherReservation() {
       this.reservationSubmitted = false
       this.submittedReservation = null
+      this.isSubmitting = false
       this.formData = {
         courseId: null,
         studentName: '',
@@ -308,6 +354,10 @@ export default {
     
     goToCourses() {
       this.$router.push('/courses')
+    },
+
+    goToMyCourses() {
+      this.$router.push('/my-courses')
     },
     
     formatDate(dateString) {
@@ -332,6 +382,65 @@ h1 {
   font-size: 2.5rem;
   color: #333;
   margin-bottom: 3rem;
+}
+
+.already-registered {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 3px solid #ffc107;
+}
+
+.warning-icon {
+  width: 80px;
+  height: 80px;
+  background: #ffc107;
+  color: white;
+  font-size: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+}
+
+.already-registered h2 {
+  color: #ff9800;
+  margin-bottom: 1rem;
+}
+
+.already-registered > p {
+  color: #666;
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+}
+
+.warning-details {
+  text-align: left;
+  background: #fff8e1;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border-left: 4px solid #ffc107;
+}
+
+.warning-details p {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.warning-details p:last-child {
+  margin-bottom: 0;
+}
+
+.warning-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .reservation-form-container {

@@ -8,7 +8,7 @@
 
     <footer>
       <div class="container">
-        <p>&copy; 2025 DeepDive. Všetky práva vyhradené.</p>
+        <p>&copy; 2026 DeepDive. Všetky práva vyhradené. Autor Tomáš Hubina.</p>
       </div>
     </footer>
   </div>

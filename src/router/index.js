@@ -54,7 +54,11 @@ const router = createRouter({
       component: DiveLogView,
       meta: { requiresAuth: true }
     }
-  ]
+  ],
+  
+  scrollBehavior() {
+    return { top: 0 }
+  }
 })
 
 router.beforeEach((to, from, next) => {

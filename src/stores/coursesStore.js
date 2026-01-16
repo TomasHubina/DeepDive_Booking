@@ -74,7 +74,7 @@ export const useCoursesStore = defineStore('courses', {
       {
         id: 1,
         name: 'Peter Novák',
-        certification: 'PADI Master Instructor',
+        certification: 'SDI Master Instructor',
         experience: '15 rokov',
         specialization: 'Kurzy pre začiatočníkov, Wreck diving',
         image: '/DeepDive_Booking/images/instructors/instructor1.png',
@@ -84,7 +84,7 @@ export const useCoursesStore = defineStore('courses', {
       {
         id: 2,
         name: 'Jana Kováčová',
-        certification: 'SSI Instructor Trainer',
+        certification: 'SDI Instructor Trainer',
         experience: '12 rokov',
         specialization: 'Technické potápanie, Deep diving',
         image: '/DeepDive_Booking/images/instructors/instructor3.png',
@@ -94,7 +94,7 @@ export const useCoursesStore = defineStore('courses', {
       {
         id: 3,
         name: 'Martin Horák',
-        certification: 'PADI Course Director',
+        certification: 'SDI Course Director',
         experience: '20 rokov',
         specialization: 'Profesionálne kurzy, Rescue',
         image: '/DeepDive_Booking/images/instructors/instructor2.png',

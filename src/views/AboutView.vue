@@ -47,7 +47,7 @@
         <div class="content-block">
           <h2>Prečo si vybrať nás?</h2>
           <ul class="features-list">
-            <li>✓ Medzinárodne certifikovaní inštruktori PADI a SSI</li>
+            <li>✓ Medzinárodne certifikovaní inštruktori SDI</li>
             <li>✓ Moderné a pravidelne servisované vybavenie</li>
             <li>✓ Malé skupiny pre individuálny prístup</li>
             <li>✓ Flexibilný rozvrh kurzov</li>
@@ -69,7 +69,7 @@
           <p>
             Naše centrum je vybavené modernou technikou a poskytujeme kurzy od začiatočníckych 
             až po profesionálne úrovne. Spolupracujeme s medzinárodnými organizáciami ako 
-            PADI a SSI, čo zaručuje najvyššiu kvalitu výuky.
+            SDI, čo zaručuje najvyššiu kvalitu výuky.
           </p>
         </div>
 

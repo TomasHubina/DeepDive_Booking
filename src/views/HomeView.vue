@@ -26,7 +26,7 @@
           <div class="feature-card">
             <div class="feature-icon">🏆</div>
             <h3>Certifikovaní inštruktori</h3>
-            <p>Všetci naši inštruktori majú medzinárodné certifikáty PADI a SSI</p>
+            <p>Všetci naši inštruktori majú medzinárodné certifikáty SDI</p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">🌊</div>
